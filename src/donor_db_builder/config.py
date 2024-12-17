@@ -2,7 +2,8 @@ import os
 import json
 import click
 
-CONFIG_DIR = click.get_app_dir("donor-db-builder")
+# CONFIG_DIR = click.get_app_dir("donor-db-builder")
+CONFIG_DIR = os.getcwd() + "/.config"
 CONFIG_FILE = os.path.join(CONFIG_DIR, "config.json")
 
 
