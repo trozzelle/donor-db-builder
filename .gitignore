@@ -169,3 +169,6 @@ cython_debug/
 
 # Docker
 docker/neo4j/*
+
+# Data files
+*.csv
