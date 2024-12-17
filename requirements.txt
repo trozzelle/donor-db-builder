@@ -4,6 +4,4 @@ python-dotenv~=1.0.1
 pandas~=2.2.3
 polars~=1.17.1
 requests~=2.32.3
-numpy~=2.2.0
-neo4j~=5.27.0
 GQLAlchemy~=1.6.0

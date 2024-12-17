@@ -3,14 +3,12 @@ services:
     image: memgraph/memgraph-mage:latest
     container_name: memgraph-mage
     volumes:
-      - ./config:/etc/memgraph
-      - ./data:/var/lib/memgraph
-      - ./user:/usr/lib/memgraph
-      - ./logs:/var/log/memgraph
+      - mg_lib:/var/lib/memgraph
+      - mg_log:/var/log/memgraph
     ports:
       - "7687:7687"
       - "7444:7444"
-    command: ["--log-level=TRACE"]
+    command: ["--log-level=TRACE", "--storage-mode=IN_MEMORY_ANALYTICAL", "--allow-load-csv=true"]
 
   lab:
     image: memgraph/lab:latest
@@ -22,3 +20,7 @@ services:
     environment:
       - QUICK_CONNECT_MG_HOST=memgraph
       - QUICK_CONNECT_MG_PORT=7687
+volumes:
+  mg_lib:
+  mg_log:
+  mg_etc:

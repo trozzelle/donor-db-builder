@@ -2,6 +2,7 @@ import polars as pl
 import requests
 from io import StringIO
 from typing import List, Optional
+from pathlib import Path
 
 from requests.auth import HTTPBasicAuth
 
@@ -23,7 +24,6 @@ class SocrataHandler:
     ):
         self.api_key = api_key
         self.base_url = base_url
-        self.auth = HTTPBasicAuth('EniidyLznn7X9znOLfwxzVO6L', '_gWCyCPQc8_ImipXqReP4d_WHRvN2EGKODFg')
         self.headers = {
             'Accept': 'text/csv',
             'X-APP-TOKEN': api_key
@@ -84,7 +84,7 @@ class SocrataHandler:
                 }
 
                 logger.info(f"Requesting data set from Socrata API (offset: {offset})")
-                response = requests.get(url, headers=self.headers, auth=self.auth, params=params)
+                response = requests.get(url, headers=self.headers, params=params)
                 response.raise_for_status()
 
                 if not response.content:
@@ -120,7 +120,8 @@ class SocrataHandler:
             raise
 
 if __name__ == "__main__":
-    print(os.getcwd())
-    socrata = SocrataHandler("c16xa2cqxdop6q2rt7zx3t6ht", "https://data.ny.gov/resource")
-    column_map = socrata.load_column_map('src/data/cf_column_map.json')
-    socrata.fetch_data(resource_id='4j2b-6a2j', column_map=column_map, date_from='2024-01-01', output_path='src/data/cf_data.csv')
+
+    data_dir = Path.cwd() / "data"
+    socrata = SocrataHandler("c2ARHjg3YK2tk4TPGgjxva9lc", "https://data.ny.gov/resource")
+    column_map = socrata.load_column_map(f'{data_dir}/cf_column_map.json')
+    socrata.fetch_data(resource_id='4j2b-6a2j', column_map=column_map, date_from='2024-01-01', output_path=f'{data_dir}/cf_data.csv')

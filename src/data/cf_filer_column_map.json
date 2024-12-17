@@ -1,21 +1,21 @@
 {
   "column_map": [
-    "filer_id",
-    "filer_name",
-    "compliance_type_desc",
-    "filer_type_desc",
-    "filer_status",
-    "committee_type_desc",
-    "office_desc",
-    "district",
-    "county_desc",
-    "municipality_subdivision_desc",
-    "treasurer_first_name",
-    "treasurer_middle_name",
-    "treasurer_last_name",
-    "address",
-    "city",
-    "state",
-    "zipcode"
+    "FILER_ID",
+    "FILER_NAME",
+    "COMPLIANCE_TYPE_DESC",
+    "FILER_TYPE_DESC",
+    "FILER_STATUS",
+    "COMMITTEE_TYPE_DESC",
+    "OFFICE_DESC",
+    "DISTRICT",
+    "COUNTY_DESC",
+    "MUNICIPALITY_SUBDIVISION_DESC",
+    "TREASURER_FIRST_NAME",
+    "TREASURER_MIDDLE_NAME",
+    "TREASURER_LAST_NAME",
+    "ADDRESS",
+    "CITY",
+    "STATE",
+    "ZIPCODE"
   ]
 }
