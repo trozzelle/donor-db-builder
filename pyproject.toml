@@ -22,3 +22,4 @@ donor-db-builder = "donor_db_builder.cli:cli"
 
 [tool.hatch.build.targets.wheel]
 packages = ["src/donor_db_builder"]
+
