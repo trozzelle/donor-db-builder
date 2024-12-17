@@ -1,0 +1,24 @@
+[build-system]
+requires = ["setuptools >= 61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "donor-db-builder"
+version = "0.1.0"
+description = "A tool for importing NYS campaign finance data into Neo4j"
+readme = "README.md"
+requires-python = ">=3.8"
+dependencies = [
+    "click",
+    "neo4j",
+    "pandas",
+    "loguru",
+    "python-dotenv",
+    "numpy",
+]
+
+[project.scripts]
+donor-db-builder = "donor_db_builder.cli:cli"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/donor_db_builder"]
