@@ -521,6 +521,7 @@ class DonorGraph:
             raise
 
     """ Import data using LOAD CSV Cypher clause, which should be one of the fastest methods.
+        Currently requires manual intervention.
     """
     def import_data_from_csv(self, contributions_df: pd.DataFrame, filers_df: pd.DataFrame):
         """Import data using LOAD CSV Cypher clause"""
@@ -626,8 +627,8 @@ if __name__ == "__main__":
     db = DonorGraph(host="localhost", port=7687, username="", password="")
     db.setDriver(uri, username, password)
     db.clear_database()
-    # db.import_data(contributions_df, filers_df)
+    db.import_data(contributions_df, filers_df)
     # db.import_data_from_query_builder(contributions_df, filers_df)
     # db.import_data_unwind(filers_df)
-    db.import_data_from_csv(contributions_df, filers_df)
+    # db.import_data_from_csv(contributions_df, filers_df)
     db.close()
