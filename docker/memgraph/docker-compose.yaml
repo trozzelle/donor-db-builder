@@ -1,0 +1,27 @@
+services:
+  memgraph:
+    image: memgraph/memgraph-mage:latest
+    container_name: memgraph-mage
+    volumes:
+      - mg_lib:/var/lib/memgraph
+      - mg_log:/var/log/memgraph
+      - "./data:/var/lib/memgraph/remote-data"
+    ports:
+      - "7687:7687"
+      - "7444:7444"
+    command: ["--log-level=TRACE", "--storage-mode=IN_MEMORY_ANALYTICAL", "--allow-load-csv=true", "--schema-info-enabled", "--query-execution-timeout-sec=1800", "--also-log-to-stderr=true"]
+
+  lab:
+    image: memgraph/lab:latest
+    container_name: memgraph-lab
+    ports:
+      - "3000:3000"
+    depends_on:
+      - memgraph
+    environment:
+      - QUICK_CONNECT_MG_HOST=memgraph
+      - QUICK_CONNECT_MG_PORT=7687
+volumes:
+  mg_lib:
+  mg_log:
+  mg_etc:

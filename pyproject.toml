@@ -22,3 +22,9 @@ donor-db-builder = "donor_db_builder.cli:cli"
 
 [tool.hatch.build.targets.wheel]
 packages = ["src/donor_db_builder"]
+
+[dependency-groups]
+dev = [
+    "ruff>=0.8.3",
+]
+
