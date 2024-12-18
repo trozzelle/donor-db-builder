@@ -5,6 +5,7 @@ services:
     volumes:
       - mg_lib:/var/lib/memgraph
       - mg_log:/var/log/memgraph
+      - ./data:/var/lib/memgraph/remote-data
     ports:
       - "7687:7687"
       - "7444:7444"

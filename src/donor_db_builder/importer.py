@@ -1,3 +1,4 @@
+import gqlalchemy
 from gqlalchemy import Memgraph, create, match, merge
 from models.Filer import Filer
 from models.Donor import Donor
@@ -11,6 +12,9 @@ import numpy as np
 from src.donor_db_builder.utils.logger import Logger
 from pathlib import Path
 import uuid
+import os
+import tempfile
+
 
 logger = Logger.get_logger()
 
@@ -516,6 +520,98 @@ class DonorGraph:
             logger.error(f"Fatal error during bulk import: {str(e)}")
             raise
 
+    """ Import data using LOAD CSV Cypher clause, which should be one of the fastest methods.
+    """
+    def import_data_from_csv(self, contributions_df: pd.DataFrame, filers_df: pd.DataFrame):
+        """Import data using LOAD CSV Cypher clause"""
+        logger.info("Starting CSV data import")
+
+        try:
+            # Create temporary directory for CSV files
+            with tempfile.TemporaryDirectory() as temp_dir:
+                # Save filers to CSV
+                filers_path = Path.cwd() / 'data' / 'filers.csv'
+                filers_df.to_csv(filers_path, index=False)
+
+                # Process and save donors/contributions
+                contributions_df['donor_type'] = contributions_df['FLNG_ENT_FIRST_NAME'].apply(
+                    lambda x: 'Individual' if not pd.isna(x) else 'Organization'
+                )
+
+                contributions_df['donor_name'] = contributions_df.apply(
+                    lambda row: (f"{row['FLNG_ENT_FIRST_NAME']} {row['FLNG_ENT_LAST_NAME']}".strip()
+                                 if row['donor_type'] == 'Individual'
+                                 else self.clean_name(row['FLNG_ENT_NAME'])),
+                    axis=1
+                )
+
+                contributions_df['donor_id'] = contributions_df.apply(
+                    self.generate_donor_id, axis=1
+                )
+
+                # Get unique donors and save to CSV
+                unique_donors = contributions_df[[
+                    'donor_id', 'donor_name', 'donor_type',
+                    'FLNG_ENT_ADD1', 'FLNG_ENT_CITY', 'FLNG_ENT_STATE', 'FLNG_ENT_ZIP'
+                ]].drop_duplicates(subset=['donor_id'])
+                donors_path = Path.cwd() / 'data' /  'donors.csv'
+                unique_donors.to_csv(donors_path, index=False)
+
+                # Save contributions to CSV
+                contributions_path = Path.cwd() / 'data' /  'contributions.csv'
+                contributions_df.to_csv(contributions_path, index=False)
+                print(contributions_path)
+                # Import filers
+                logger.info("Importing {} filers", len(filers_df))
+                self.db.execute("""
+                    LOAD CSV FROM "/var/lib/memgraph/remote-data/filers.csv" WITH HEADER AS row
+                    MERGE (f:Filer {filer_id: row.FILER_ID})
+                    SET 
+                        f.id = {},
+                        f.name = row.FILER_NAME,
+                        f.type = row.FILER_TYPE_DESC,
+                        f.status = row.FILER_STATUS,
+                        f.office = row.OFFICE_DESC,
+                        f.district = row.DISTRICT,
+                        f.county = row.COUNTY_DESC
+                """).format(str(uuid.uuid4()))
+
+                # Import donors
+                logger.info("Importing {} donors", len(unique_donors))
+                self.db.execute("""
+                    LOAD CSV WITH HEADERS FROM 'file:///{}' AS row
+                    MERGE (d:Donor {id: row.donor_id})
+                    SET 
+                        d.name = row.donor_name,
+                        d.type = row.donor_type,
+                        d.address = row.FLNG_ENT_ADD1,
+                        d.city = row.FLNG_ENT_CITY,
+                        d.state = row.FLNG_ENT_STATE,
+                        d.zip = row.FLNG_ENT_ZIP
+                """.format(donors_path.replace('\\', '/')))
+
+                # Import contributions with relationships
+                logger.info("Importing {} contributions with relationships", len(contributions_df))
+                self.db.execute("""
+                    LOAD CSV WITH HEADERS FROM 'file:///{}' AS row
+                    MATCH (d:Donor {id: row.donor_id})
+                    MATCH (f:Filer {filer_id: row.FILER_ID})
+                    CREATE (d)-[:MADE]->(c:Contribution {
+                        transaction_id: row.TRANS_NUMBER,
+                        amount: toFloat(row.ORG_AMT),
+                        date: datetime(row.SCHED_DATE),
+                        payment_type: row.PAYMENT_TYPE_DESC,
+                        contributor_type: row.CNTRBR_TYPE_DESC,
+                        payment_method: row.PAYMENT_TYPE_DESC
+                    })-[:TO]->(f)
+                """.format(contributions_path.replace('\\', '/')))
+
+                logger.success("CSV data import completed successfully")
+
+        except Exception as e:
+            logger.error(f"Fatal error during CSV import: {str(e)}")
+            raise
+
 if __name__ == "__main__":
 
     contributions_df = pd.read_csv(Path.cwd()/'data'/'cf_data.csv', escapechar='\\')
@@ -532,5 +628,6 @@ if __name__ == "__main__":
     db.clear_database()
     # db.import_data(contributions_df, filers_df)
     # db.import_data_from_query_builder(contributions_df, filers_df)
-    db.import_data_unwind(filers_df)
+    # db.import_data_unwind(filers_df)
+    db.import_data_from_csv(contributions_df, filers_df)
     db.close()
