@@ -1,0 +1,22 @@
+{
+  "Campaign Finance Filer Data: Beginning 1974": {
+    "resource_id": "7x2g-h32p",
+    "description": "All Campaign Finance Filers registered with the New York State Board of Elections"
+  },
+  "Campaign Finance Disclosure Reports Data: Beginning 1999": {
+    "resource_id": "e9ss-239a",
+    "description": "All Campaign Finance Disclosure Reports Filed with the New York Board of Elections since July 1999"
+  },
+  "Campaign Finance Disclosure Reports Contributions: Beginning 1999": {
+    "resource_id": "4j2b-6a2j",
+    "description": "All Campaign Finance Disclosure Reports contributions Filed with the New York Board of Elections since July 1999"
+  },
+  "Campaign Finance Disclosure Reports Expenditures: Beginning 1999": {
+    "resource_id": "ajsb-8pni",
+    "description": "All Campaign Finance Disclosure Reports expenditures Filed with the New York Board of Elections since July 1999"
+  },
+  "Public Funds Payments: Beginning 1999": {
+    "resource_id": "u69g-mvrb",
+    "description": "Public Funds payments to election campaigns."
+  }
+}
