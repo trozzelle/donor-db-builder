@@ -20,7 +20,7 @@ class GraphImporter:
         # self.db = GraphDatabase.driver(uri, auth=(username, password))
         # self.db = Memgraph(host=host, port=port, username=username, password=password)
         uri = f"bolt://localhost:7687"
-        self.db = GraphDatabase.driver(uri, auth=(username, password))
+        self.db = GraphDatabase.driver(uri, auth=("tr", "memgraph"))
 
         logger.info("Initializing GraphImporter")
 
@@ -124,7 +124,9 @@ class GraphImporter:
 
             # Generate and execute_query query
             query = self._generate_merge_query(model, identifier_field)
-            self.db.execute_query(query, {"items": items})
+            self.db.execute_query(
+                query, parameters_={"items": items}, database_="memgraph"
+            )
 
             logger.success(f"Successfully loaded {len(items)} {model.__name__} records")
 
@@ -189,7 +191,9 @@ class GraphImporter:
                 list(field_mappings.keys()),
             )
 
-            self.db.execute_query(query, {"items": items})
+            self.db.execute_query(
+                query, parameters_={"items": items}, database_="memgraph"
+            )
             logger.success(
                 f"Successfully loaded {len(items)} {model.__name__} records with relationships"
             )

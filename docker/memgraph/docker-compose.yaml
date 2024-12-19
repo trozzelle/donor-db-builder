@@ -5,10 +5,12 @@ services:
     volumes:
       - mg_lib:/var/lib/memgraph
       - mg_log:/var/log/memgraph
-      - "./data:/var/lib/memgraph/remote-data"
     ports:
       - "7687:7687"
       - "7444:7444"
+    environment:
+      - MEMGRAPH_USER=tr
+      - MEMGRAPH_PASSWORD=memgraph
     command: ["--log-level=TRACE", "--storage-mode=IN_MEMORY_ANALYTICAL", "--allow-load-csv=true", "--schema-info-enabled", "--query-execution-timeout-sec=1800", "--also-log-to-stderr=true"]
 
   lab:

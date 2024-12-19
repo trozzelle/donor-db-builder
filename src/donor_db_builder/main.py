@@ -26,8 +26,8 @@ if __name__ == "__main__":
     filers_df = pd.read_csv(Path.cwd() / "data" / "cf_filers.csv", escapechar="\\")
 
     uri = f"bolt://localhost:7687"
-    username = ""
-    password = ""
+    username = "tr"
+    password = "memgraph"
 
     # contributions_df['ID'] = contributions_df.apply(lambda _: str(uuid.uuid4()), axis=1)
 
@@ -49,7 +49,12 @@ if __name__ == "__main__":
     processor = ParallelProcessor(num_processes=16)
 
     # Database configuration
-    db_config = {"host": "localhost", "port": 7687, "username": "", "password": ""}
+    db_config = {
+        "host": "localhost",
+        "port": 7687,
+        "username": "tr",
+        "password": "memgraph",
+    }
 
     filer_transformers = {"id": _generate_uuid}
 

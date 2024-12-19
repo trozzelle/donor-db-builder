@@ -642,7 +642,7 @@ class DonorGraph:
                 self.db.execute("""
                     LOAD CSV FROM "/var/lib/memgraph/remote-data/filers.csv" WITH HEADER AS row
                     MERGE (f:Filer {filer_id: row.FILER_ID})
-                    SET 
+                    SET
                         f.id = {},
                         f.name = row.FILER_NAME,
                         f.type = row.FILER_TYPE_DESC,
@@ -658,7 +658,7 @@ class DonorGraph:
                     """
                     LOAD CSV WITH HEADERS FROM 'file:///{}' AS row
                     MERGE (d:Donor {id: row.donor_id})
-                    SET 
+                    SET
                         d.name = row.donor_name,
                         d.type = row.donor_type,
                         d.address = row.FLNG_ENT_ADD1,
