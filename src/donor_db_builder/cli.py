@@ -63,30 +63,30 @@ class DonorBuilder(App):
     CSS_PATH = ["styles/config.tcss"]
 
     CSS = """
-    ConfigScreen {
-        padding: 1 2;
-    }
-    
-    .heading {
-        text-style: bold;
-        margin-bottom: 1;
-    }
-    
-    #config_container {
-        width: 100%;
-        height: auto;
-    }
-
-    Input > .input--label {
-        width: 15;  /* Fixed width for labels */
-        color: $text;
-        padding-bottom: 1;
-    }
-    
-    Button {
-        margin-top: 1;
-    }
-    """
+    # ConfigScreen {
+    #     padding: 1 2;
+    # }
+    # 
+    # .heading {
+    #     text-style: bold;
+    #     margin-bottom: 1;
+    # }
+    # 
+    # #config_container {
+    #     width: 100%;
+    #     height: auto;
+    # }
+    # 
+    # Input > .input--label {
+    #     width: 15;  /* Fixed width for labels */
+    #     color: $text;
+    #     padding-bottom: 1;
+    # }
+    # 
+    # Button {
+    #     margin-top: 1;
+    # }
+    # """
 
     BINDINGS = [("d", "toggle_dark", "Toggle dark mode")]
 

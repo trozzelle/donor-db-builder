@@ -1,0 +1,31 @@
+
+
+ConfigScreenMain {
+    layout: vertical;
+    width: 1fr;
+    border: royalblue;
+}
+
+ConfigScreenBody {
+    height: 100%;
+    layout: horizontal;
+    padding-left: 2;
+    border: white;
+}
+
+LabeledInput {
+    layout: horizontal;
+    width: 1fr;
+}
+
+#cf-label {
+    width: 7;
+    offset: 0 1;
+}
+
+#cf-id {
+    width: 29;
+    background: black;
+    text-style: bold;
+    border: royalblue;
+}
