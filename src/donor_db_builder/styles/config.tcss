@@ -1,0 +1,23 @@
+    Input {
+        height: 3;
+        margin: 1 0;
+        width:25%;
+        background: transparent;
+    }
+
+    LabeledInput {
+        layout: horizontal;
+        height: 3;
+        margin: 1 0;
+        width: 50%;
+    }
+    
+    LabeledInput > .label {
+        width: 15;
+        offset: 0 1;
+        padding-right: 1;
+    }
+    
+    LabeledInput > Input {
+        width: 100%;
+    }

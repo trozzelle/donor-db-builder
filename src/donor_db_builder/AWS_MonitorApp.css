@@ -1,0 +1,105 @@
+/* The button class */
+
+AWSMonitorMain {
+    layout: vertical;
+    width: 1fr;
+    border: royalblue;
+}
+
+AWSMonitorHeader {
+    width: 1fr;
+    height: 5;
+    layout: horizontal;
+    padding-left: 2;
+    border: white;
+    min-width: 140;
+    max-width: 140;
+}
+
+AWSMonitorBody {
+    layout: horizontal;
+    border: white;
+    width: 1fr;
+    height: 1fr;
+}
+
+AWSAccessStateInfo {
+    layout: horizontal;
+    width: 1fr;
+}
+
+#aws-access-state-label {
+    width: 5;
+    offset: 0 1;
+}
+
+#aws-access-state-value {
+    layout: horizontal;
+    width: 13;
+    background: black;
+    text-style: bold;
+    border: darkred;
+}
+
+.aws-access-connected {
+    border: green;
+}
+
+.aws-access-not-connected {
+    border: darkred;
+}
+
+#pending_connection {
+    border: darkred;
+}
+
+AmiInfo {
+    layout: horizontal;
+    width: 1fr;
+}
+
+#ami-label {
+    width: 7;
+    offset: 0 1;
+}
+
+#ami-id {
+    width: 29;
+    background: black;
+    text-style: bold;
+    border: royalblue;
+}
+
+VersionInfo {
+    layout: horizontal;
+    width: 1fr;
+}
+
+#version-label {
+    width: 5;
+    offset: 0 1;
+}
+
+#version-number {
+    width: 20;
+    background: black;
+    text-style: bold;
+    border: royalblue;
+}
+
+MottoInfo {
+    layout: horizontal;
+    width: 1fr;
+}
+
+#motto-label {
+    width: 7;
+    offset: 0 1;
+}
+
+#motto-value {
+    width: 31;
+    background: black;
+    text-style: bold;
+    border: royalblue;
+}
