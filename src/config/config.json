@@ -1,0 +1,18 @@
+{
+  "DB_HOST": {
+    "label": "Host",
+    "value": "127.0.0.1",
+  },
+  "DB_PORT": {
+    "label": "Port",
+    "value": 7987
+  },
+  "DB_USER": {
+    "label": "User",
+    "value": ""
+  },
+  "DB_PASS": {
+    "label": "Pass",
+    "value": ""
+  }
+}
