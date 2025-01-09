@@ -10,6 +10,9 @@ Base = declarative_base()
 
 
 def id_field(table_name: str):
+    """Generates auto-incrementing id field, necessary
+    since DuckDB doesn't yet support Postgres SERIAL type"""
+
     sequence = Sequence(f"{table_name}_seq")
     return Field(
         default=None,
@@ -25,12 +28,12 @@ class WebContent(SQLModel, table=True):
     id: int | None = id_field("webcontent")
     uid: str
     url: HttpUrl = Field(sa_type=AutoString)
-    domain: str
+    domain: str = Field(index=True)
     title: Optional[str]
     content: str
     site_meta: str
     fetched_at: datetime
-    donor_id: Optional[str] = None
+    donor_id: Optional[str] = Field(default=None, index=True)
     tags: str
 
 

@@ -7,7 +7,14 @@ class EntityExtractor(BaseProcessor):
 
     def __init__(self, model: str = "en_core_web_sm", entity_types: List[str] = None):
         super().__init__(model)
-        self.entity_types = entity_types or ["PERSON", "ORGANIZATION"]
+        self.entity_types = entity_types or [
+            "PERSON",
+            "ORG",
+            "DATE",
+            "TIME",
+            "LOC",
+            "WORK_OF_ART",
+        ]
 
     def process(self, text: str) -> Dict[str, List[Dict[str, Any]]]:
         doc = self.nlp(text)

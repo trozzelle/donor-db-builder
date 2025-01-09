@@ -4,6 +4,7 @@ import trafilatura
 from datetime import datetime, timezone
 from loguru import logger
 from urllib.parse import urlparse
+import json
 
 
 class WebFetcher:

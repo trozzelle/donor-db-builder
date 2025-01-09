@@ -1,5 +1,5 @@
 from typing import List, Dict, Any
-from .base import BaseProcessor
+from src.donor_db_builder.nlp.processors.base import BaseProcessor
 from loguru import logger
 
 

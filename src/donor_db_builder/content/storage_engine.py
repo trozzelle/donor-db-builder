@@ -5,9 +5,9 @@ from pathlib import Path
 import json
 from datetime import datetime
 import uuid
-from sqlmodel import create_engine, SQLModel
+from sqlmodel import create_engine, SQLModel, Session, select
 from sqlalchemy import URL
-from models_orm import WebContent, ContentMetadata
+from .models_orm import WebContent, ContentMetadata
 from loguru import logger
 
 MODULE_DIR = Path(__file__).parent.parent.parent
@@ -60,26 +60,22 @@ class ContentStore:
         """Store content in database"""
 
         content_id = str(uuid.uuid4())
+        session = Session(self.engine)
+
         try:
-            self.conn.execute(
-                """
-                            INSERT INTO content (
-                                id, url, domain, title, content, metadata,
-                                fetched_at, donor_id, tags
-                            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?);
-                        """,
-                (
-                    content_id,
-                    content["url"],
-                    content["domain"],
-                    content.get("title"),
-                    content["content"],
-                    json.dumps(content.get("metadata", {})),
-                    content["fetched_at"],
-                    donor_id,
-                    json.dumps(tags or []),
-                ),
+            record = WebContent(
+                uid=content_id,
+                url=content["url"],
+                domain=content["domain"],
+                title=content.get("title"),
+                content=content["content"],
+                site_meta=json.dumps(content.get("metadata", {})),
+                fetched_at=content["fetched_at"],
+                donor_id=donor_id,
+                tags=json.dumps(tags or []),
             )
+            session.add(record)
+            session.commit()
 
             return content_id
 
@@ -89,29 +85,33 @@ class ContentStore:
 
     def get_content(self, content_id: str) -> Optional[Dict[str, Any]]:
         """Retrieve content from database"""
-        result = self.conn.execute(
-            """
-        SELECT * FROM content WHERE id = ?""",
-            [content_id],
-        ).fetchone()
 
-        if result:
-            return dict(zip(result.keys(), result))
-        return None
+        with Session(self.engine) as session:
+            statement = select(WebContent).where(WebContent.uid == content_id)
+            result = session.exec(statement).first()
+
+            if result:
+                return dict(result)
+            return None
 
     def get_donor_content(self, donor_id: str) -> List[Dict[str, Any]]:
         """Retrieve all content associated with a donor"""
 
-        results = self.conn.execute(
-            """
-        SELECT * FROM content WHERE donor_id = ?
-        ORDER BY fetched_at DESC""",
-            [donor_id],
-        ).fetchall()
+        with Session(self.engine) as session:
+            statement = select(WebContent).where(WebContent.donor_id == donor_id)
+            results = session.exec(statement)
 
-        return [dict(zip(result.keys(), result)) for result in results]
+            if results:
+                return [dict(result) for result in results]
+            return None
 
     def export_to_arrow(self, output_path: str):
-        """Export content to Arrow format"""
+        """Export content to Arrow format
+        # TODO Update this for SQLAlchemy"""
+        # with Session(self.engine) as session:
+        #     statement = select(WebContent)
+        #     results = session.exec(statement)
+        #     if results:
+
         query_results = self.conn.execute("SELECT * FROM content").arrow()
         arrow.parquet.write_table(query_results, output_path)
