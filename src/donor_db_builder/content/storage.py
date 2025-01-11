@@ -8,7 +8,7 @@ import uuid
 from loguru import logger
 
 MODULE_DIR = Path(__file__).parent.parent.parent
-DEFAULT_DB_PATH = MODULE_DIR / "data" / "content.duckdb"
+DEFAULT_DB_PATH = MODULE_DIR / "data" / "app.db"
 
 
 class ContentStore:
