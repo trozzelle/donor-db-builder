@@ -3,7 +3,7 @@ from pathlib import Path
 from typing import Dict, List, Type, Any, Set
 import pandas as pd
 from sqlmodel import SQLModel
-from ..database import SQLHandler
+from donor_db_builder.database import SQLHandler
 from loguru import logger
 
 
@@ -91,7 +91,7 @@ class DataIngestor(ABC):
                     session.commit()
 
                     logger.info(
-                        f"Inserted batch {i//batch_size + 1} "
+                        f"Inserted batch {i // batch_size + 1} "
                         f"({len(batch)} main records, "
                         f"{len(all_nested_models)} nested records)"
                     )

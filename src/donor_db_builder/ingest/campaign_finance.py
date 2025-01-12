@@ -26,6 +26,9 @@ class CampaignFinanceIngestor(DataIngestor):
             logger.error(f"Failed to load CSV files: {str(e)}")
             raise
 
+    def transform_record(self):
+        pass
+
     def transform_filer(self, record: Dict[str, Any]) -> Filer:
         """Transform filer record into Filer model"""
         location = Location(
@@ -51,7 +54,10 @@ class CampaignFinanceIngestor(DataIngestor):
     def transform_payment(self, record: Dict[str, Any]) -> Payment:
         """Transform payment record into Payment model"""
         # Create either Individual or Organization based on type
-        if record["payer_type"] == "individual":
+        # If the record has an entity name, treat it as an organization
+        # this isn't perfect but suffices for development until
+        # definable logic is implemented
+        if record["FLNG_ENT_NAME"]:
             payer = Individual(
                 first_name=record.get("FLNG_ENT_FIRST_NAME"),
                 last_name=record.get("FLNG_ENT_LAST_NAME"),
@@ -76,7 +82,7 @@ class CampaignFinanceIngestor(DataIngestor):
             )
 
         return Payment(
-            amount=record["ORG_AMOUNT"],
+            amount=record["ORG_AMT"],
             date=record["SCHED_DATE"],
             payer_type=record["CNTRBR_TYPE_DESC"],
             payer=payer,

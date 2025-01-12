@@ -13,9 +13,12 @@
 from models.SQLModels import Individual, Organization, Location, Payment, Filer
 from pathlib import Path
 from sqlmodel import create_engine, SQLModel
-from database.sql import SQLHandler
+from donor_db_builder.database.sql import SQLHandler
+from donor_db_builder.ingest.campaign_finance import CampaignFinanceIngestor
+from donor_db_builder.config import get_settings, get_project_paths
 
-if __name__ == "__main__":
+
+def main():
     # fetcher = WebFetcher()
     # store = ContentStore()
     #
@@ -42,13 +45,22 @@ if __name__ == "__main__":
     #
     # response = sllm.
 
-    MODULE_DIR = Path(__file__).parent.parent.parent
-    DEFAULT_DB_PATH = MODULE_DIR / "src" / "data" / "app.db"
+    project_paths = get_project_paths()
+    DATA_DIR = project_paths.get_path("data")
+    DB_PATH = DATA_DIR / "app.db"
 
-    db_path = DEFAULT_DB_PATH
-    sql = SQLHandler(db_path)
+    db_path = DB_PATH
+    sql = SQLHandler(
+        db_path, [Individual, Organization, Location, Payment, Filer], echo=True
+    )
+    ingestor = CampaignFinanceIngestor(sql, DATA_DIR)
+    ingestor.ingest()
     # engine = create_engine(f"duckdb:///{db_path}", echo=True)
     #
     # # self.conn = duckdb.connect(database=db_path)
     # SQLModel.metadata.create_all(engine)
     print("")
+
+
+if __name__ == "__main__":
+    main()

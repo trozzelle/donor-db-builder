@@ -1,4 +1,4 @@
-from typing import Optional, Type
+from typing import Optional, Type, List
 from pathlib import Path
 
 from sqlalchemy.exc import SQLAlchemyError
@@ -20,7 +20,7 @@ class SQLHandler(DatabaseHandler):
     def __init__(
         self,
         db_path: Optional[Path] = None,
-        models: Optional[Type[SQLModel]] = None,
+        models: Optional[List[Type[SQLModel]]] = None,
         echo: bool = False,
     ):
         try:

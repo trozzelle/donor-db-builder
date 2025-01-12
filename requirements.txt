@@ -1,9 +1,0 @@
-loguru
-click
-python-dotenv
-pandas
-polars
-requests
-GQLAlchemy
-numpy
-neo4j
