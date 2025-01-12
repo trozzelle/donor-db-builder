@@ -1,6 +1,7 @@
-from typing import ClassVar, Optional, List
 from sqlmodel import Field
 from datetime import datetime
+
+"""Base models representing database tables"""
 
 
 class IndividualBase:
@@ -30,7 +31,7 @@ class PaymentBase:
     payer_type: str | None = Field(
         description="Payer type of the payment", nullable=False
     )
-    # payer_id: int = Field(description="Payer ID of the payment", nullable=False)
+    payer_id: int = Field(description="Payer ID of the payment", nullable=False)
 
 
 class FilerBase:

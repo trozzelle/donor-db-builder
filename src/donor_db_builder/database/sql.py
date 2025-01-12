@@ -27,7 +27,15 @@ class SQLHandler(DatabaseHandler):
             super().__init__(db_path)
             self.models = models or []
             self.echo = echo
-            self.db_url = f"duckdb:///{db_path}" if db_path else None
+            # If no filepath is provided, we create an in-memory database
+            logger.info(
+                f"Using database at {db_path}"
+            ) if db_path is not None else logger.info(
+                "No filepath provided. Using in-memory database. Data will not persist."
+            )
+
+            db_path = db_path if db_path is not None else ":memory:"
+            self.db_url = f"duckdb:///{db_path}"
 
             if not db_path:
                 raise ValueError("Database path is required")

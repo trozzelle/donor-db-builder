@@ -1,7 +1,5 @@
 from typing import ClassVar, Optional, List
-from sqlmodel import Field, SQLModel, Relationship, Integer, Sequence, Column
-from .helpers import generate_id_sequence
-from datetime import datetime
+from sqlmodel import Field, SQLModel, Relationship, Sequence
 from .BaseModels import (
     IndividualBase,
     OrganizationBase,
@@ -10,24 +8,22 @@ from .BaseModels import (
     FilerBase,
 )
 
+"""
+Models for the SQLAlchemy classes that represent the db schema.
 
-# def id_field(table_name: str):
-#     sequence = Sequence(f"{table_name}_sequence", metadata=SQLModel.metadata)
-#     return Field(
-#         default=None,
-#         primary_key=True,
-#         sa_column_args=[sequence],
-#         sa_column_kwargs={"server_default": sequence.next_value()},
-#     )
+Sequences currently need to be created manually in the schema for 
+reasons I have not yet debugged.
+
+ID columns are currently not created first in the table schema. This
+is because SQLModel executes the Field() (Column()) call before the 
+sa_column_args. Leaving as-is for now because it should be obviated
+by building a more dynamic schema generator.
+
+https://github.com/fastapi/sqlmodel/issues/542
+"""
 
 
 class Individual(SQLModel, IndividualBase, table=True):
-    # id: int | None = Field(
-    #     default_factory=generate_id_sequence("individual"),
-    #     primary_key=True,
-    #     description="",
-    # )
-
     individual_id_seq: ClassVar = Sequence("individual_id_seq")
     id: int | None = Field(
         default=None,
@@ -35,8 +31,6 @@ class Individual(SQLModel, IndividualBase, table=True):
         sa_column_args=[individual_id_seq],
         sa_column_kwargs={"server_default": individual_id_seq.next_value()},
     )
-
-    # id: int | None = id_field("individual")
 
     location_id: int | None = Field(
         default=None,
@@ -56,10 +50,6 @@ class Individual(SQLModel, IndividualBase, table=True):
 
 
 class Organization(SQLModel, OrganizationBase, table=True):
-    # id: int | None = Field(
-    #     default_factory=generate_id_sequence("organization"),
-    #     primary_key=True,
-    #     description="",
     organization_id_seq: ClassVar = Sequence("organization_id_seq")
     id: int | None = Field(
         default=None,
@@ -67,8 +57,6 @@ class Organization(SQLModel, OrganizationBase, table=True):
         sa_column_args=[organization_id_seq],
         sa_column_kwargs={"server_default": organization_id_seq.next_value()},
     )
-
-    # id: int | None = id_field("organization")
 
     location_id: int | None = Field(
         default=None,
@@ -88,11 +76,6 @@ class Organization(SQLModel, OrganizationBase, table=True):
 
 
 class Location(SQLModel, LocationBase, table=True):
-    # id: int | None = Field(
-    #     default_factory=generate_id_sequence("location"),
-    #     primary_key=True,
-    #     description="",
-    # )
     location_id_seq: ClassVar = Sequence("location_id_seq")
     id: int | None = Field(
         default=None,
@@ -100,7 +83,6 @@ class Location(SQLModel, LocationBase, table=True):
         sa_column_args=[location_id_seq],
         sa_column_kwargs={"server_default": location_id_seq.next_value()},
     )
-    # id: int | None = id_field("location")
 
     individuals: List["Individual"] = Relationship(back_populates="location")
     organizations: List["Organization"] = Relationship(back_populates="location")
@@ -108,11 +90,6 @@ class Location(SQLModel, LocationBase, table=True):
 
 
 class Payment(SQLModel, PaymentBase, table=True):
-    # id: int | None = Field(
-    #     default_factory=generate_id_sequence("payment"),
-    #     primary_key=True,
-    #     description="",
-    # )
     payment_id_seq: ClassVar = Sequence("payment_id_seq")
     id: int | None = Field(
         default=None,
@@ -121,40 +98,25 @@ class Payment(SQLModel, PaymentBase, table=True):
         sa_column_kwargs={"server_default": payment_id_seq.next_value()},
     )
 
-    # id: int | None = id_field("payment")
-
     filer_id: int | None = Field(
         foreign_key="filer.id", description="Foreign key to the filer table"
     )
-
     filer: "Filer" = Relationship(back_populates="payments")
-    # individual: Individual = Relationship(
-    #     sa_relationship_kwargs={
-    #         "foreign_keys": "[Individual.id]",
-    #         "primaryjoin": "and_(Payment.payer_id==Individual.id, "
-    #         "Payment.payer_type=='individual')",
-    #     }
-    # )
-    # individual: Optional[Individual] = Relationship(
-    #     back_populates="payments",
-    #     sa_relationship_kwargs={
-    #         "foreign_keys": "[Individual.id]",
-    #         "primaryjoin": "and_(Payment.payer_id==foreign(Individual.id), "
-    #         "Payment.payer_type=='individual')",
-    #     },
-    # )
-    # organization: Optional[Organization] = Relationship(
-    #     back_populates="payments",
-    #     sa_relationship_kwargs={
-    #         "foreign_keys": "[Organization.id]",
-    #         "primaryjoin": "and_(Payment.payer_id==foreign(Organization.id), "
-    #         "Payment.payer_type=='organization')",
-    #     },
-    # )
+
+    # Even though this is a required foreign key, we need to
+    # make it nullable since the field is populated after insert
+    payer_id: int | None = Field(
+        default=None, description="Foreign key to payer in Individual or Organization"
+    )
+
+    payer_type: str = Field(
+        description="Type of the payer",
+        nullable=False,
+    )
+
     individual: Optional[Individual] = Relationship(
         back_populates="payments",
         sa_relationship_kwargs={
-            # "foreign_keys": "[Individual.id]",
             "primaryjoin": "and_(foreign(Payment.payer_id)==Individual.id, "
             "Payment.payer_type=='individual')",
         },
@@ -162,7 +124,6 @@ class Payment(SQLModel, PaymentBase, table=True):
     organization: Optional[Organization] = Relationship(
         back_populates="payments",
         sa_relationship_kwargs={
-            # "foreign_keys": "[Organization.id]",
             "primaryjoin": "and_(foreign(Payment.payer_id)==Organization.id, "
             "Payment.payer_type=='organization')",
         },
@@ -170,11 +131,6 @@ class Payment(SQLModel, PaymentBase, table=True):
 
 
 class Filer(SQLModel, FilerBase, table=True):
-    # id: int | None = Field(
-    #     default_factory=generate_id_sequence("filer"),
-    #     primary_key=True,
-    #     description="",
-    # )
     filer_id_seq: ClassVar = Sequence("filer_id_seq")
     id: int | None = Field(
         default=None,
@@ -182,8 +138,6 @@ class Filer(SQLModel, FilerBase, table=True):
         sa_column_args=[filer_id_seq],
         sa_column_kwargs={"server_default": filer_id_seq.next_value()},
     )
-
-    # id: int | None = id_field("filer")
 
     location_id: int = Field(
         foreign_key="location.id", description="Foreign key to the location table"
