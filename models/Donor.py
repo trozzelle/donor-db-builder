@@ -1,10 +1,22 @@
 from gqlalchemy import Node, Field, Memgraph
+from typing import ClassVar, Optional
+from neontology import BaseNode, BaseRelationship, init_neontology
 import pandas as pd
+from .helpers import generate_id_sequence
+
+
+class DonorNode(BaseNode):
+    id: int | None = Field(
+        default_factory=generate_id_sequence("donor"),
+        description="",
+    )
+
 
 class Donor(Node):
     """
     Represents a donor of campaign contributions
     """
+
     id: str = Field(unique=True, db=Memgraph())
     name: str
     type: str  # 'Individual' or 'Organization'
@@ -18,13 +30,13 @@ class Donor(Node):
         """Bulk save donors using UNWIND"""
         donors = [
             {
-                'id': row['donor_id'],
-                'name': row['donor_name'],
-                'type': row['donor_type'],
-                'address': row['FLNG_ENT_ADD1'],
-                'city': row['FLNG_ENT_CITY'],
-                'state': row['FLNG_ENT_STATE'],
-                'zip': row['FLNG_ENT_ZIP']
+                "id": row["donor_id"],
+                "name": row["donor_name"],
+                "type": row["donor_type"],
+                "address": row["FLNG_ENT_ADD1"],
+                "city": row["FLNG_ENT_CITY"],
+                "state": row["FLNG_ENT_STATE"],
+                "zip": row["FLNG_ENT_ZIP"],
             }
             for _, row in donors_df.iterrows()
         ]
@@ -41,11 +53,13 @@ class Donor(Node):
             zip: donor.zip
         }
         """
-        db.execute(query, {'donors': donors})
+        db.execute(query, {"donors": donors})
+
 
 """
 One-off functions to clean up the data for this model
 """
+
 
 def _set_type(x):
     """
