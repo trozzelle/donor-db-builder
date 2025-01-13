@@ -41,7 +41,7 @@ class SQLHandler(DatabaseHandler):
                 raise ValueError("Database path is required")
 
             self.create_engine()
-            self.initialize()
+            # self.initialize()
         except Exception as e:
             logger.error(f"Failed to initialize SQL handler {str(e)}")
             raise DatabaseInitializationError("Database initialization failed") from e
@@ -58,7 +58,8 @@ class SQLHandler(DatabaseHandler):
     def initialize(self) -> None:
         """Initialize the database and write schema if necessary."""
         try:
-            self.engine = create_engine(self.db_url, echo=self.echo)
+            # Requires manually calling initialize to create db schema
+            # self.engine = create_engine(self.db_url, echo=self.echo)
             SQLModel.metadata.create_all(self.engine)
             logger.info("Successfully created database schema")
         except SQLAlchemyError as e:

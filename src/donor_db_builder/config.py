@@ -72,7 +72,7 @@ class ProjectPaths:
         self.paths: Dict[str, Path] = {
             "docker": self.PROJECT_ROOT / "docker",
             "models": self.PROJECT_ROOT / "models",
-            "data": self.PROJECT_ROOT / "src" / "data",
+            "data": self.PROJECT_ROOT / "data",
         }
 
     def get_path(self, name: str) -> Path:
