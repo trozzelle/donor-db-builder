@@ -2,12 +2,10 @@ import os
 import json
 from linecache import cache
 from pathlib import Path
-import click
 from typing import Literal, Dict
 from pydantic_settings import BaseSettings
 from functools import cache
 
-# CONFIG_DIR = click.get_app_dir("donor-db-builder")
 CONFIG_DIR = os.getcwd() + "/.config"
 CONFIG_FILE = os.path.join(CONFIG_DIR, "config.json")
 

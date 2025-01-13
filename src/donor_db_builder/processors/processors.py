@@ -1,4 +1,4 @@
-from src.donor_db_builder.graph_importer import GraphImporter
+from donor_db_builder.database.gqlalchemy.graph_importer import GraphImporter
 from typing import Dict, Any
 import pandas as pd
 

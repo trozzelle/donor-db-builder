@@ -10,9 +10,9 @@ from gqlalchemy import Memgraph, create, merge
 from loguru import logger
 from neo4j import GraphDatabase
 
-from models.Contribution import Contribution, Made, To
-from models.Donor import Donor
-from models.Filer import Filer
+from models.gqlalchemy.Contribution import Contribution, Made, To
+from models.gqlalchemy.Donor import Donor
+from models.gqlalchemy.Filer import Filer
 from src.donor_db_builder.utils.logger import Logger
 
 logger = Logger.get_logger()
@@ -243,7 +243,7 @@ class DonorGraph:
                         subdivision=row["SUBDIVISION"],
                     ).save(self.db)
                     if (i + 1) % 100 == 0:
-                        logger.debug(f"Processed {i+1} filers")
+                        logger.debug(f"Processed {i + 1} filers")
                 except Exception as e:
                     logger.error(
                         "Error importing committee %s: %s", row["FILER_ID"], str(e)

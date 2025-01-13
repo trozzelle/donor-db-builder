@@ -2,7 +2,7 @@ from gqlalchemy import Node, Field, Memgraph
 from typing import ClassVar, Optional
 from neontology import BaseNode, BaseRelationship, init_neontology
 import pandas as pd
-from .helpers import generate_id_sequence
+from models.helpers import generate_id_sequence
 
 
 class DonorNode(BaseNode):
