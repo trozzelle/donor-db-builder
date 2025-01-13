@@ -2,12 +2,11 @@ import os
 import json
 from linecache import cache
 from pathlib import Path
-import click
 from typing import Literal, Dict
 from pydantic_settings import BaseSettings
 from functools import cache
+from loguru import logger
 
-# CONFIG_DIR = click.get_app_dir("donor-db-builder")
 CONFIG_DIR = os.getcwd() + "/.config"
 CONFIG_FILE = os.path.join(CONFIG_DIR, "config.json")
 
@@ -21,7 +20,7 @@ def load_config():
         with open(CONFIG_FILE, "r") as f:
             return json.load(f)
     except Exception as e:
-        click.echo(f"Error loading config: {e}", err=True)
+        logger.error(f"Error loading config: {e}")
         return {}
 
 
@@ -34,7 +33,7 @@ def save_config(config):
         with open(CONFIG_FILE, "w") as f:
             json.dump(config, f, indent=2)
     except Exception as e:
-        click.echo(f"Error saving config: {e}", err=True)
+        logger.error(f"Error saving config: {e}")
 
 
 def get_setting(key, default=None):

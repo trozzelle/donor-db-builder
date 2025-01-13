@@ -37,8 +37,8 @@ class Individual(SQLModel, IndividualBase, table=True):
         foreign_key="location.id",
         description="Foreign key to the location table",
     )
-
     location: "Location" = Relationship(back_populates="individuals")
+
     payments: List["Payment"] = Relationship(
         back_populates="individual",
         sa_relationship_kwargs={
@@ -63,8 +63,8 @@ class Organization(SQLModel, OrganizationBase, table=True):
         foreign_key="location.id",
         description="Foreign key to the location table",
     )
-
     location: "Location" = Relationship(back_populates="organizations")
+
     payments: List["Payment"] = Relationship(
         back_populates="organization",
         sa_relationship_kwargs={
@@ -142,8 +142,8 @@ class Filer(SQLModel, FilerBase, table=True):
     location_id: int = Field(
         foreign_key="location.id", description="Foreign key to the location table"
     )
-
     location: Location = Relationship(back_populates="filers")
+
     payments: List["Payment"] = Relationship(back_populates="filer")
 
 
