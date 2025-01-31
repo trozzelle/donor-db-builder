@@ -1,0 +1,32 @@
+{
+    "show_first_run": false,
+    "no_save": false,
+    "no_save_chat": false,
+    "project_paths": {
+        "PROJECT_ROOT": "/Users/ada.sh/Development/Projects/donor-db-builder",
+        "paths": {
+            "root": "/Users/ada.sh/Development/Projects/donor-db-builder",
+            "docker": "/Users/ada.sh/Development/Projects/donor-db-builder/docker",
+            "models": "/Users/ada.sh/Development/Projects/donor-db-builder/models",
+            "data": "/Users/ada.sh/Development/Projects/donor-db-builder/data",
+            "theme": "/Users/ada.sh/Development/Projects/donor-db-builder/themes",
+            "absolute": "/Users/ada.sh/Development/Projects/donor-db-builder"
+        }
+    },
+    "data_dir": "/Users/ada.sh/Development/Projects/donor-db-builder/data",
+    "settings_dir": "/Users/ada.sh/Development/Projects/donor-db-builder/.raising",
+    "settings_file": "/Users/ada.sh/Development/Projects/donor-db-builder/.raising/settings.json",
+    "cache_dir": "",
+    "secret_key": "",
+    "secrets_file": "/Users/ada.sh/Development/Projects/donor-db-builder/data/secrets.json",
+    "app_db": "/Users/ada.sh/Development/Projects/donor-db-builder/data/app.db",
+    "app_db_mode": "Persist",
+    "default_theme_dir": "/Users/ada.sh/Development/Projects/donor-db-builder/src/donor_db_builder/cli/themes",
+    "theme_dir": "/Users/ada.sh/Development/Projects/donor-db-builder/themes",
+    "theme_name": "raise_dark",
+    "theme_mode": "dark",
+    "starting_tab": "Options",
+    "last_tab": "Ingest",
+    "use_last_tab_on_startup": true,
+    "max_log_lines": 1000
+}

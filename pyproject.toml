@@ -3,7 +3,7 @@ name = "donor-db-builder"
 version = "0.1.0"
 description = ""
 authors = [
-    {name = "Torin Rozzelle",email = "hello@torinrozzelle.com"}
+    {name = "Torin Rozzelle"}
 ]
 readme = "README.md"
 requires-python = ">=3.11,<3.12"
@@ -31,16 +31,35 @@ dependencies = [
     "ipywidgets (>=8.1.5,<9.0.0)",
     "llama-index-readers-wikipedia (>=0.3.0,<0.4.0)",
     "dlt (>=1.5.0,<2.0.0)",
+    "typer (>=0.15.1,<0.16.0)",
+    "rich (>=13.9.4,<14.0.0)",
+    "textual (>=1.0.0,<2.0.0)",
+    "click-shell (>=2.1,<3.0)",
+    "pyte (>=0.8.2,<0.9.0)",
+    "cyclopts (>=3.2.0,<4.0.0)",
+    "textual-dev (>=1.7.0,<2.0.0)",
+    "textual-fastdatatable (>=0.11.0,<0.12.0)",
+    "orjson (>=3.10.14,<4.0.0)",
+    "textual-autocomplete==2.1.0b0",
+]
+
+packages = [
+    "src/donor_db_builder"
 ]
 
 
 [build-system]
-requires = ["poetry-core>=2.0.0,<3.0.0"]
-build-backend = "poetry.core.masonry.api"
+requires = ["hatchling"]
+build-backend = "hatchling.build"
 
-[tool.poetry.group.dev.dependencies]
-pytest = "^8.3.4"
-ruff = "^0.9.1"
+[project.optional-dependencies]
+dev = [
+    "pytest>=8.3.4",
+    "ruff>=0.9.1",
+]
 
-[tool.poetry.scripts]
-ingest = "donor_db_builder.adhoc:main"
+[project.scripts]
+raising = "donor_db_builder.__main__:run"
+
+[tool.hatch.version]
+path = "src/donor_db_builder/__init__.py"
